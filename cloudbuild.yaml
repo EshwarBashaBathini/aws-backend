@@ -1,0 +1,8 @@
+steps:
+  - name: 'gcr.io/cloud-builders/mvn'
+    args: ['clean', 'package']
+
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', '--quiet']
+
+timeout: '1200s'  # 20 minutes (adjust if needed)

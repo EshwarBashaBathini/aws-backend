@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: java-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: java-app
+  template:
+    metadata:
+      labels:
+        app: java-app
+    spec:
+      containers:
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.33.2
+          command:
+            - "/cloud_sql_proxy"
+            - "-instances=liquid-tractor-464105-m0:us-central1:eshwar-sql=tcp:3306"
+            - "-credential_file=/secrets/cloudsql/credentials.json"
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+        - name: java-container
+          image: gcr.io/liquid-tractor-464105-m0/java-app:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://127.0.0.1:3306/public?useSSL=false&createDatabaseIfNotExist=true
+            - name: SPRING_DATASOURCE_USERNAME
+              value: root
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: Eshwar@123
+            - name: HIBERNATE_DIALECT
+              value: org.hibernate.dialect.MySQLDialect
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials

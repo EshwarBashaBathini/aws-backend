@@ -1,0 +1,24 @@
+runtime: java17
+instance_class: F1  # Consider F2 or higher for production
+
+entrypoint: java -jar ems-backend-0.0.1-SNAPSHOT.jar
+
+env_variables:
+  SPRING_PROFILES_ACTIVE: "prod,cloud"
+
+  # AWS RDS MySQL details (external DB, reachable over public internet)
+  SPRING_DATASOURCE_URL: "jdbc:mysql://database-1.cq5kc68ia3f3.us-east-1.rds.amazonaws.com:3306/public?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true"
+  SPRING_DATASOURCE_USERNAME: "admin"
+  SPRING_DATASOURCE_PASSWORD: "Eshwar1234"
+  SPRING_JPA_HIBERNATE_DDL-AUTO: "update"
+
+# Enable health checks
+health_check:
+  enable_health_check: True
+  check_interval_sec: 30
+  timeout_sec: 10
+
+# Basic scaling for cost efficiency
+basic_scaling:
+  max_instances: 5
+  idle_timeout: 10m
