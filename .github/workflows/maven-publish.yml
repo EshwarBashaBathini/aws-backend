@@ -1,36 +1,58 @@
-name: Deploy to App Engine
-
+name: Deploy to GCP App Engine
+ 
 on:
+
   push:
+
     branches:
-      - main  # or your deployment branch
 
+      - main
+ 
 jobs:
-  build-and-deploy:
-    name: Build and Deploy to App Engine
+
+  deploy:
+
     runs-on: ubuntu-latest
-
+ 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Set up Java
+      - name: Checkout code
+
+        uses: actions/checkout@v4
+ 
+      - name: Set up JDK
+
         uses: actions/setup-java@v4
+
         with:
-          distribution: 'temurin'
+
           java-version: '17'
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v2
+          distribution: 'temurin'
+ 
+      - name: Authenticate to Google Cloud
+
+        uses: google-github-actions/auth@v1
+
         with:
+
           credentials_json: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+ 
+      - name: Set up Google Cloud SDK
 
-      - name: Set up gcloud
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-          install_components: 'app-engine-java'
 
+        with:
+
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+
+          version: 'latest'  # optional, but good to specify
+ 
+      - name: Build with Maven
+
+        run: mvn clean install -DskipTests
+ 
       - name: Deploy to App Engine
-        run: |
-          gcloud app deploy target/ems-backend-0.0.1-SNAPSHOT.jar  --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+
+        run: gcloud app deploy target/ems-backend-0.0.1-SNAPSHOT.jar --quiet
+ 
