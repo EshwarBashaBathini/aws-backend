@@ -10,7 +10,7 @@ env_variables:
   SPRING_DATASOURCE_URL: "jdbc:mysql://database-1.cq5kc68ia3f3.us-east-1.rds.amazonaws.com:3306/public?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true"
   SPRING_DATASOURCE_USERNAME: "admin"
   SPRING_DATASOURCE_PASSWORD: "Eshwar1234"
-  SPRING_JPA_HIBERNATE_DDL-AUTO: "update"
+  SPRING_JPA_HIBERNATE_DDL_AUTO: "update"
 
 # Enable health checks
 health_check:
