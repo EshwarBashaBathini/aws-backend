@@ -33,4 +33,4 @@ jobs:
 
       - name: Deploy to App Engine
         run: |
-          gcloud app deploy app.yaml --quiet --project=${{ secrets.GCP_PROJECT_ID }}
+          gcloud app deploy --project=${{ secrets.GCP_PROJECT_ID }}
